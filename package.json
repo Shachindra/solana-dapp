@@ -1,0 +1,63 @@
+{
+  "name": "solana-dapp",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Solana DApp for Solana using Anchor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "yarn deploy:docs && yarn deploy:example",
+    "deploy:docs": "yarn docs && gh-pages --dist docs --dotfiles",
+    "deploy:example": "gh-pages --dist packages/starter/example/out --dest example --dotfiles",
+    "docs": "shx rm -rf docs && NODE_OPTIONS=--max_old_space_size=24000 typedoc && shx cp ./{.nojekyll,wallets.png} docs/",
+    "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
+    "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
+  },
+  "dependencies": {
+    "@project-serum/anchor": "0.25.0"
+    
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.18.9",
+    "@types/eslint": "^8.4.5",
+    "@types/eslint-plugin-prettier": "^3.1.0",
+    "@types/node": "^18.6.3",
+    "@types/prettier": "^2.6.4",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "gh-pages": "^4.0.0",
+    "lerna": "^5.3.0",
+    "shx": "^0.3.3",
+    "tsc-esm": "^1.0.4",
+    "tslib": "^2.3.0",
+    "typedoc": "^0.23.10",
+    "typescript": "^4.6.2",
+    "typescript-esm": "^2.0.0",
+    "mocha": "^9.1.3",
+    "prettier": "^2.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shachindra/solana-dapp.git"
+  },
+  "workspaces": [
+    "dapp"
+  ],
+  "keywords": [
+    "Solana",
+    "DApp",
+    "Rust",
+    "Anchor"
+  ],
+  "author": "Shachindra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Shachindra/solana-dapp/issues"
+  },
+  "homepage": "https://github.com/Shachindra/solana-dapp#readme"
+}
