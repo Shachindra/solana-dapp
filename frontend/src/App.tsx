@@ -1,9 +1,9 @@
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter, SolletWalletAdapter,  } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter, SolletWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import * as solanaWeb3 from '@solana/web3.js';
-import {Program, Provider, web3, BN } from "@project-serum/anchor";
+import {Program, Provider, web3, BN, AnchorProvider } from "@project-serum/anchor";
 import React, { FC, ReactNode, useMemo } from 'react';
 import idl from './dapp.json';
 
@@ -37,7 +37,8 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
              * your users connect to will be loaded.
              */
             new PhantomWalletAdapter(),
-            new SolletWalletAdapter({network})
+            new SolletWalletAdapter({network}),
+            new SolflareWalletAdapter(),
         ],
         []
     );
@@ -59,8 +60,8 @@ const Content: FC = () => {
         if (!wallet) {
             return null;
         }
-        const network = "";
-        const connection = new Connection(network, "processed");
+        const network = "Devnet";
+        const connection = new solanaWeb3.Connection(network, "processed");
 
         const provider = new Provider(connection, wallet, {"preFlightCommitment": "processed"});
         return provider;

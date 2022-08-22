@@ -14,8 +14,8 @@
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
   },
   "dependencies": {
-    "@project-serum/anchor": "0.25.0"
-    
+    "@project-serum/anchor": "0.25.0",
+    "create-react-app": "5.0.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
