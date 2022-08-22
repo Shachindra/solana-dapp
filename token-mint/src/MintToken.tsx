@@ -2,11 +2,15 @@ import * as solanaWeb3 from "@solana/web3.js";
 import { createMint, getOrCreateAssociatedTokenAccount, mintTo, transfer, Account, getMint, getAccount } from "@solana/spl-token";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { BaseWalletAdapter } from "@solana/wallet-adapter-base";
+import { Buffer } from "buffer";
+
+// @ts-ignore
+window.Buffer = Buffer;
 
 function MintToken() {
 
-    const network = "Devnet";
-    const connection = new solanaWeb3.Connection(network, "confirmed");
+    const network = "devnet";
+    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl(network), "confirmed");
 
     const wallet= useAnchorWallet();
     const baseAccount = solanaWeb3.Keypair.generate();
@@ -17,15 +21,18 @@ function MintToken() {
 
     async function createToken() {
         const fromAirdropSignature = await connection.requestAirdrop(baseAccount.publicKey, 2*solanaWeb3.LAMPORTS_PER_SOL);
+        await connection.confirmTransaction(fromAirdropSignature);
+
+        console.log(baseAccount.publicKey.toBase58());
 
         mint = await createMint(
             connection, 
             baseAccount, 
             baseAccount.publicKey, 
             null, 
-            9
+            9 // 1000000000 = 10 SOL
         );
-        console.log('Create Token:, ${mint.toBase58()}');
+        console.log('Create Token:', mint.toBase58());
 
         fromTokenAccount = await getOrCreateAssociatedTokenAccount(
             connection,
@@ -34,7 +41,7 @@ function MintToken() {
             baseAccount.publicKey
         );
 
-        console.log('Create Token Account: ${fromTokenAccount.address.toBase58()}')
+        console.log('Create Token Account:', fromTokenAccount.address.toBase58());
     }
 
     async function mintToken() {
@@ -44,18 +51,19 @@ function MintToken() {
             mint,
             fromTokenAccount.address,
             baseAccount.publicKey,
-            1000000000
+            1000000000,
+            []
         );
 
-        console.log('Signature: ${signature');
+        console.log('Signature: ',signature);
     }
 
     async function checkBalance() {
         const mintInfo = await getMint(connection, mint);
-        console.log('Supply: ${mintInfo.supply}');
+        console.log('Supply: ', mintInfo.supply);
 
         const tokenAccountInfo = await getAccount(connection, fromTokenAccount.address);
-        console.log('Amount in token Account: ${tokenAccountInfo.supply}');
+        console.log('Amount in token Account: ', tokenAccountInfo.amount);
     }
 
     async function sendToken() {
@@ -65,7 +73,7 @@ function MintToken() {
             mint,
             toWallet
         )
-        console.log("Receiver's Address: $toTokenAccount.address");
+        console.log("Receiver's Address: ", toTokenAccount.address.toBase58());
 
         const signature = await transfer(
             connection,
@@ -73,10 +81,11 @@ function MintToken() {
             fromTokenAccount.address,
             toTokenAccount.address,
             baseAccount.publicKey,
-            1000000000
+            1000000000,
+            []
         );
 
-        console.log('Transfer Completed: ${signature');
+        console.log('Transfer Completed: ', signature);
     }
 
     return (
